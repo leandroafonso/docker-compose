@@ -1,0 +1,58 @@
+version: "3"
+services:
+    webserver:
+        container_name: webserver-newenv
+        restart: always
+        image: leandroafonso/dev:latest
+        build: .
+        dns: 8.8.8.8
+#       depends_on:
+#           - redis
+#           - mysql
+        networks:
+            vpc-newenv:
+                ipv4_address: 10.30.0.2
+        ports: 
+            - "9080:80"
+            #- "443:443"
+        volumes:
+            - "/var/www/newenv:/var/www/local.app"
+            - "/var/log/newenv/apache2:/var/log/apache2"
+            - "/var/log/newenv/php:/var/log/php"
+        environment:
+            WEB_PHP_TIMEOUT: 600
+            WEB_DOCUMENT_ROOT: "/var/www"
+    mysql:
+        container_name: mysql-newenv
+        restart: always
+        image: mysql:5.7.20
+        command: --sql_mode="ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER"
+#        ports: 
+#            - "3386:3306"
+        networks:
+            vpc-newenv:
+               ipv4_address: 10.30.0.10 
+        environment:
+            MYSQL_ROOT_PASSWORD: monetizze
+            MYSQL_USER: root
+            MYSQL_PASSWORD: monetizze
+        volumes:
+            - "/var/lib/mysql:/var/lib/mysql"
+    redis:
+        container_name: redis-newenv
+        restart: always
+        image: redis
+        ports:
+            - "7963:6379"
+        networks:
+            vpc-newenv:
+                ipv4_address: 10.30.0.3            
+volumes:
+    data:
+networks:
+    vpc-newenv:
+        driver: bridge
+        ipam:
+            driver: default
+            config:
+                - subnet: 10.30.0.0/16
