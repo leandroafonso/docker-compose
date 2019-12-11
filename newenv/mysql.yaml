@@ -9,9 +9,9 @@
             vpc-newenv:
                ipv4_address: 10.30.0.10 
         environment:
-            MYSQL_ROOT_PASSWORD: monetizze
+            MYSQL_ROOT_PASSWORD: myeggs
             MYSQL_USER: root
-            MYSQL_PASSWORD: monetizze
+            MYSQL_PASSWORD: myeggs
         volumes:
             - "/var/lib/mysql:/var/lib/mysql"
     redis:
